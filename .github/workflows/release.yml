@@ -6,6 +6,8 @@ name: Release
       - next
       - beta
       - "*.x"
+      - main
+      - _staging
 permissions:
   contents: read # for checkout
 jobs:
