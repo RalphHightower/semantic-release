@@ -41,7 +41,7 @@
     "get-stream": "^6.0.0",
     "git-log-parser": "^1.2.0",
     "hook-std": "^3.0.0",
-    "hosted-git-info": "^6.0.0",
+    "hosted-git-info": "^7.0.0",
     "lodash-es": "^4.17.21",
     "marked": "^5.0.0",
     "marked-terminal": "^5.1.1",
@@ -67,7 +67,7 @@
     "js-yaml": "4.1.0",
     "mockserver-client": "5.15.0",
     "nock": "13.3.3",
-    "p-retry": "5.1.2",
+    "p-retry": "6.0.0",
     "prettier": "3.0.2",
     "sinon": "15.2.0",
     "stream-buffers": "3.0.2",
@@ -81,6 +81,7 @@
     "bin",
     "docs",
     "lib",
+    "index.d.ts",
     "index.js",
     "cli.js"
   ],
@@ -98,6 +99,7 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "types": "index.d.ts",
   "c8": {
     "include": [
       "lib/**/*.js",
