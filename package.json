@@ -72,11 +72,11 @@
     "ls-engines": "0.9.1",
     "mockserver-client": "5.15.0",
     "nock": "13.5.4",
-    "npm-run-all2": "6.1.2",
+    "npm-run-all2": "6.2.0",
     "p-retry": "6.2.0",
     "prettier": "3.2.5",
     "publint": "0.2.7",
-    "sinon": "17.0.2",
+    "sinon": "18.0.0",
     "stream-buffers": "3.0.2",
     "tempy": "3.1.0",
     "testdouble": "3.20.2"
@@ -162,5 +162,5 @@
       "github>semantic-release/.github:renovate-config"
     ]
   },
-  "packageManager": "npm@10.7.0"
+  "packageManager": "npm@10.8.0"
 }
