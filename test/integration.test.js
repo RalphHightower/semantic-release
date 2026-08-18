@@ -1955,6 +1955,44 @@ test.serial('Hide sensitive information passed to "success" plugin', async (t) =
   });
 });
 
+test.serial("Hide encoded credentials in the logs of a failing git command", async (t) => {
+  const { cwd } = await gitRepo(true);
+  await gitCommits(["First"], { cwd });
+
+  // `GIT_CREDENTIALS` contains URL reserved characters, so the authenticated repository URL built by
+  // `get-git-auth-url.js` contains the credentials percent-encoded (`user:abc%40def%2Fsecret`).
+  // The remote points to a closed loopback port, so the first git command using the authenticated URL
+  // fails and the failing command is logged.
+  const env = { GIT_CREDENTIALS: "user:abc@def/secret" };
+  const options = {
+    branch: "master",
+    repositoryUrl: "http://127.0.0.1:9/owner/repo.git",
+    verifyConditions: stub().resolves(),
+    verifyRelease: false,
+    generateNotes: false,
+    prepare: false,
+    publish: false,
+    addChannel: false,
+    success: false,
+    fail: false,
+  };
+
+  await td.replaceEsm("env-ci", null, () => ({ isCi: true, branch: "master", isPr: false }));
+  const semanticRelease = (await import("../index.js")).default;
+  const stdout = new WritableStreamBuffer();
+  const stderr = new WritableStreamBuffer();
+  await t.throwsAsync(semanticRelease(options, { cwd, env, stdout, stderr }));
+
+  const output = (stdout.getContentsAsString("utf8") || "") + (stderr.getContentsAsString("utf8") || "");
+
+  // The failing git command was logged with the credentials masked
+  t.regex(output, /127\.0\.0\.1:9/);
+  t.regex(output, new RegExp(escapeRegExp(SECRET_REPLACEMENT)));
+  t.notRegex(output, new RegExp(escapeRegExp(env.GIT_CREDENTIALS)));
+  t.notRegex(output, new RegExp(escapeRegExp("user:abc%40def%2Fsecret")));
+  t.notRegex(output, new RegExp(escapeRegExp(encodeURIComponent(env.GIT_CREDENTIALS))));
+});
+
 test.serial("Get all commits including the ones not in the shallow clone", async (t) => {
   let { cwd, repositoryUrl } = await gitRepo(true);
   await gitTagVersion("v1.0.0", undefined, { cwd });
